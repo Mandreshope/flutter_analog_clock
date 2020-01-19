@@ -41,12 +41,12 @@ class ClockBloc {
     _flareStreamController.add('switch_to_day');
     _switchNightModeStreamController.add('switch_day');
     _updateTime();
-    _backgroundFlare(_now);
   }
 
   _updateTime() {
     DateTime _now = DateTime.now();
     dateTimeSink.add(_now);
+    _backgroundFlare(_now);
     Timer(
       Duration(seconds: 1) - Duration(milliseconds: _now.millisecond),
       _updateTime,
@@ -103,12 +103,12 @@ class ClockBloc {
   }
 
   void _backgroundFlare(data) {
+    print(data.hour);
     if(data.hour >= 17 && data.hour <= 23){
       flareSink.add('switch_to_night');
       switchNightModeSink.add('switch_night');
     }else if(data.hour >= 00 && data.hour <= 05) {
       flareSink.add('switch_to_night');
-      switchNightModeSink.add('switch_night');
     }else {
       flareSink.add('switch_to_day');
       switchNightModeSink.add('switch_day');

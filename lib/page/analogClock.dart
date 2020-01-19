@@ -2,7 +2,6 @@ import 'package:analog_clock/bloc/clockBloc.dart';
 import 'package:analog_clock/widget/containerHand.dart';
 import 'package:analog_clock/widget/drawnHand.dart';
 import 'package:flare_flutter/flare_actor.dart';
-import 'package:flare_flutter/flare_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:vector_math/vector_math_64.dart' show radians;
 
@@ -41,7 +40,6 @@ class _AnalogClockState extends State<AnalogClock> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final height = MediaQuery.of(context).size.height;
     final customTheme = Theme.of(context).brightness == Brightness.light
     ? Theme.of(context).copyWith(
         // Hour hand.
@@ -182,45 +180,6 @@ class _AnalogClockState extends State<AnalogClock> {
             ),
           ],
         ) 
-      ),
-      floatingActionButton: StreamBuilder(
-        stream: _clockBloc.nightModeStream,
-        initialData: false,
-        builder: (BuildContext context, AsyncSnapshot<bool> nightSnap) {
-          return GestureDetector(
-            child: Container(
-              width: 100,
-              height: 60,
-              child: StreamBuilder(
-                initialData: 'switch_day',
-                stream: _clockBloc.switchNightModeStream,
-                builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-                  return FlareActor('assets/switch_day.flr', 
-                    callback: (v) {
-                      if(v == 'switch_day'){
-                        _clockBloc.switchAnimate('day_idle');
-                      }else {
-                        _clockBloc.switchAnimate('night_idle');
-                      }
-                      
-                    },
-                    fit: BoxFit.cover,
-                    animation: snapshot.data
-                  );
-                },
-              )
-            ),
-            onTap: () {
-              if(nightSnap.data == true) {
-                _clockBloc.desactivateNightMode();
-                _clockBloc.switchAnimate('switch_day');
-              }else {
-                _clockBloc.activateNightMode();
-                _clockBloc.switchAnimate('switch_night');
-              }
-            },
-          );
-        },
       ),
     );
   }
